@@ -1,14 +1,17 @@
 
+
+
+
 import { useState, useContext } from "react";
-import './App.css';
 import {
-  sanitizeArr,formatArrayToMatrix,splitStringToArray, creteMapFromData
+  formatArrayToMatrix,splitStringToArray, creteMapFromData
 } from "./utils/dataUtils"; 
+import { longestCollabWork } from "./utils/calculateTimeWorkedUtils";
+import styles from './App.css';
 
-function App() {
-
-  
-  const [data, setData]= useState([]);
+function App(){
+    const [data, setData]= useState([]);
+    const [longestCollab,setLongestCollab]=useState(null);
   function handleFileUpload(e) {
     e.preventDefault();
     const file=e.target.files[0];
@@ -30,33 +33,25 @@ function App() {
         console.error(`Data on row ${error} is invalid`));
       }
       const map=creteMapFromData(dataMatrix);
-      console.log(map);
-      setData(dataMatrix);
+      setLongestCollab(longestCollabWork(map));
     };
 
-
-  //   const reader = new FileReader();
-  //   reader.readAsText(file);
-  //   reader.onload = function (e){
-  //   const map=creteMapFromData(e.target.result);
-  //   console.log(map);
-  //     setData(map);
-  // }
-    
-      
-  //   };
-   
-
   }
-  
   return (
-    <div className="App">
-      <header className="App-header">
-      <input type="file" onChange={handleFileUpload} />
-      </header>
-    </div>
+    <>
+      <div className={styles.container}>
+        <h1>Employees Common Projects</h1>
+        <button>
+          <label>
+            <input type="file" onChange={handleFileUpload} />
+            Upload employees information
+            
+          </label>
+          {longestCollab ? <p>The most time two employees worked together  is:{longestCollab.daysWorked} days,</p> : null}
+        </button> 
+      </div>
+    </>
   );
-
 }
 
 export default App;
